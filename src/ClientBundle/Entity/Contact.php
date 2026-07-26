@@ -182,8 +182,7 @@ class Contact implements Serializable, Stringable
     private ?Client $client = null;
 
     #[ApiProperty(iris: ['https://schema.org/email'])]
-    #[ORM\Column(name: 'email', type: Types::STRING, length: 255)]
-    #[Assert\NotBlank(groups: ['Default', 'form'])]
+    #[ORM\Column(name: 'email', type: Types::STRING, length: 255, nullable: true)]
     #[Assert\Email(mode: Assert\Email::VALIDATION_MODE_STRICT, groups: ['Default', 'form'])]
     #[Serialize\Groups(['contact_api:read', 'contact_api:write', 'searchable'])]
     private ?string $email = null;

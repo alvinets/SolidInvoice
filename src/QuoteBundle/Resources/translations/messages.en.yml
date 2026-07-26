@@ -2,6 +2,7 @@ quote:
     label: 'Quote #'
     from: 'From'
     to: 'To'
+    date: 'Quote Date'
     pdf:
         title: 'QUOTE'
         date: 'Quote Date'

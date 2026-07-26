@@ -2,6 +2,7 @@ quote:
     title: 'Quote %id%'
     number: 'Quote #'
     view: 'View Quote'
+    date: 'Date'
     created: 'Created'
     expires: 'Expires'
     subtotal: 'Subtotal'
