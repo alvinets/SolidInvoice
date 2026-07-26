@@ -53,9 +53,6 @@
                 </div>
 
                 {# Main Quote Card #}
-                {% if documentTemplate|default(null) is not empty %}
-                    {% include documentTemplate %}
-                {% else %}
                 <div class="card card-lg">
                     <div class="card-body">
                         {# Header with Logo and Quote Info #}
@@ -83,8 +80,8 @@
                             <div class="card-body py-4">
                                 <div class="row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <div class="ext-doc-metadata-label text-uppercase small mb-1">{{ 'quote.pdf.date'|trans }}</div>
-                                        <div class="ext-doc-metadata-value fw-medium">{{ quote.created|date('M d, Y') }}</div>
+                                        <div class="ext-doc-metadata-label text-uppercase small mb-1">{{ 'Quote Date'|trans }}</div>
+                                        <div class="ext-doc-metadata-value fw-medium">{{ quote.quotationDate|date('M d, Y') }}</div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="ext-doc-metadata-label text-uppercase small mb-1">{{ 'quote.total'|trans }}</div>
@@ -255,7 +252,6 @@
                         {% endif %}
                     </div>
                 </div>
-                {% endif %}
 
                 {% if setting('system/general/hide_powered_by') is not same as('1') %}
                     {# Footer #}

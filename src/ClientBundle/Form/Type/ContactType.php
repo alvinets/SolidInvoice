@@ -38,13 +38,12 @@ class ContactType extends AbstractType
     {
         $builder->add('firstName', null, ['label' => 'client.contact.firstName.label', 'sanitize_html' => true, 'allow_single_quotes' => true]);
         $builder->add('lastName', null, ['label' => 'client.contact.lastName.label', 'sanitize_html' => true, 'allow_single_quotes' => true]);
-        $builder->add('email', null, ['label' => 'client.contact.email.label']);
+        $builder->add('email', null, ['label' => 'client.contact.email.label', 'required' => false]);
 
         if ($this->featureGate->isEnabled(Feature::CustomFields->value)) {
             $builder->add('customFields', CustomFieldValueCollectionType::class, [
                 'target' => CustomFieldTarget::CONTACT,
                 'parent_record' => $options['data'] ?? null,
-                'manage_persistence' => false,
             ]);
         }
     }

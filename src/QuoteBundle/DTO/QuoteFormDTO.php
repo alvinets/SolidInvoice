@@ -60,6 +60,9 @@ final class QuoteFormDTO
     #[Assert\Type(DateTimeInterface::class)]
     public ?DateTimeInterface $due = null;
 
+    #[Assert\Type(DateTimeInterface::class)]
+    public ?DateTimeInterface $quotationDate = null;
+
     public ?Discount $discount = null;
 
     public ?string $terms = null;
