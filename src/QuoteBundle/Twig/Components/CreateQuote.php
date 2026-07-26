@@ -210,7 +210,6 @@ final class CreateQuote extends AbstractController
         $form = $this->getForm();
 
         if (! $form->isValid()) {
-            // Totals already recalculated by PreReRender hook
             return null;
         }
 

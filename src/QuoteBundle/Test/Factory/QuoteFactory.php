@@ -74,6 +74,7 @@ final class QuoteFactory extends PersistentProxyObjectFactory
         return [
             'client' => ClientFactory::new(),
             'company' => CompanyFactory::random(),
+            'quotationDate' => DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'due' => DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'status' => self::faker()->randomElement(QuoteStatus::cases()),
             'terms' => self::faker()->text(),

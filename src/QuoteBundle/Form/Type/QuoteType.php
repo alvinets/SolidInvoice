@@ -37,6 +37,7 @@ use SolidWorx\Platform\PlatformBundle\Feature\FeatureGate;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -192,6 +193,8 @@ class QuoteType extends AbstractType
 
         $builder->add('quoteId', null, ['data' => $data]);
 
+        $builder->add('quotationDate', DateType::class, ['widget' => 'single_text', 'input' => 'datetime_immutable', 'required' => false]);
+        $builder->add('due', DateType::class, ['widget' => 'single_text', 'label' => 'Due Date', 'required' => false, 'input' => 'datetime_immutable']);
         $builder->add('terms');
         $builder->add('notes', null, ['help' => 'Notes will not be visible to the client']);
         $builder->add('total', HiddenMoneyType::class, ['currency' => $options['currency']]);

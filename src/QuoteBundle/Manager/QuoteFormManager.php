@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace SolidInvoice\QuoteBundle\Manager;
 
+use DateTimeImmutable;
 use InvalidArgumentException;
 use SolidInvoice\ClientBundle\Entity\Client;
 use SolidInvoice\ClientBundle\Entity\Contact;
@@ -48,6 +49,8 @@ final readonly class QuoteFormManager
 
         // Map DTO fields to entity
         $quote->setQuoteId($dto->quoteId);
+        // If the form doesn't provide a quotation date, default to today
+        $quote->setQuotationDate($dto->quotationDate ?? new DateTimeImmutable('today'));
         $quote->setDue($dto->due);
         $quote->setDiscount($dto->discount);
         $quote->setTerms($dto->terms);
@@ -90,6 +93,8 @@ final readonly class QuoteFormManager
     public function updateQuoteFromDTO(Quote $quote, QuoteFormDTO $dto): void
     {
         $quote->setQuoteId($dto->quoteId);
+        // If the form doesn't provide a quotation date, default to today
+        $quote->setQuotationDate($dto->quotationDate ?? new DateTimeImmutable('today'));
         $quote->setDue($dto->due);
         $quote->setDiscount($dto->discount);
         $quote->setTerms($dto->terms);
@@ -148,6 +153,7 @@ final readonly class QuoteFormManager
 
         // Map entity fields to DTO
         $dto->quoteId = $quote->getQuoteId();
+        $dto->quotationDate = $quote->getQuotationDate();
         $dto->due = $quote->getDue();
         $dto->discount = $quote->getDiscount();
         $dto->terms = $quote->getTerms();

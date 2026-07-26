@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="attention-item-meta">
                                         <span class="attention-item-amount">{{ quote.total|formatCurrency(quote.client.currency) }}</span>
-                                        <span class="attention-item-date">{{ quote.created|date('M j') }}</span>
+                                        <span class="attention-item-date">{{ quote.quotationDate|date('M j') }}</span>
                                     </div>
                                 </a>
                             {% endfor %}

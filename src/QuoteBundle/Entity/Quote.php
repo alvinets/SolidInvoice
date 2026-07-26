@@ -293,6 +293,12 @@ class Quote
     #[Groups(['quote_api:read', 'quote_api:write'])]
     private ?DateTimeInterface $due = null;
 
+    #[ORM\Column(name: 'quotation_date', type: Types::DATE_IMMUTABLE, nullable: false)]
+    #[Assert\Type(type: DateTimeInterface::class)]
+    #[Assert\NotBlank]
+    #[Groups(['quote_api:read', 'quote_api:write'])]
+    private ?DateTimeInterface $quotationDate = null;
+
     /**
      * @var Collection<int, Line>
      */
@@ -341,6 +347,7 @@ class Quote
         $this->withholdingAmount = BigInteger::zero();
         $this->payableAmount = BigInteger::zero();
         $this->setUuid(Uuid::v7());
+        $this->setQuotationDate(new \DateTime());
     }
 
     public function getId(): ?Ulid
@@ -472,6 +479,17 @@ class Quote
     public function setDue(?DateTimeInterface $due): self
     {
         $this->due = $due;
+        return $this;
+    }
+
+    public function getQuotationDate(): ?DateTimeInterface
+    {
+        return $this->quotationDate;
+    }
+
+    public function setQuotationDate(?DateTimeInterface $quotationDate): self
+    {
+        $this->quotationDate = $quotationDate;
         return $this;
     }
 
