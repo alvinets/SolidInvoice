@@ -1,0 +1,3 @@
+<?php // config.encrypt.public on Tue, 28 Jul 2026 08:44:52 +0000
+
+return "\xB3S\xC0Che\xDEs\x25\xC94\xD8ia\x1Fpk9\xCD\x60\x23\x7ByZ\x0B6\x8D\xA6\xDE\xBE\xDBW";

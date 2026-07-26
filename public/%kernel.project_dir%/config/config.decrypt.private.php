@@ -1,0 +1,4 @@
+<?php // config.decrypt.private on Tue, 28 Jul 2026 08:44:52 +0000
+
+// SYMFONY_DECRYPTION_SECRET=JNBDINGZybc4285Leu2k+Yu7Mbp7KCsIox9RBWNKD0SzU8BDaGXecyXJNNhpYR9waznNYCN7eVoLNo2m3r7bVw==
+return "\x24\xD0C\x20\xD1\x99\xC9\xB78\xDB\xCEKz\xED\xA4\xF9\x8B\xBB1\xBA\x7B\x28\x2B\x08\xA3\x1FQ\x05cJ\x0FD\xB3S\xC0Che\xDEs\x25\xC94\xD8ia\x1Fpk9\xCD\x60\x23\x7ByZ\x0B6\x8D\xA6\xDE\xBE\xDBW";
