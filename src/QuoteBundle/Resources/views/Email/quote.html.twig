@@ -43,7 +43,7 @@
         <row>
             <columns>
                 <p style="color: #1e293b; font-size: 16px; line-height: 1.5; margin: 0 0 24px 0; Margin: 0 0 24px 0;">
-                    {{ 'quote.info'|trans({'%company%': setting('system/company/company_name'), '%created%': quote.created|date}, 'email') }}
+                    {{ 'quote.info'|trans({'%company%': setting('system/company/company_name'), '%created%': quote.quotationDate|date}, 'email') }}
                 </p>
             </columns>
         </row>
@@ -54,7 +54,7 @@
     {# Quote details section #}
     {{ email.info_row('quote.number'|trans({}, 'email'), quote.quoteId) }}
     {{ email.spacer('xs') }}
-    {{ email.info_row('quote.created'|trans({}, 'email'), quote.created|date) }}
+    {{ email.info_row('quote.date'|trans({}, 'email'), quote.quotationDate|date) }}
 
     {% if quote.due %}
         {{ email.spacer('xs') }}

@@ -109,6 +109,7 @@ final class QuoteTest extends ApiTestCase
                 'type' => 'percentage',
                 'value' => 10,
             ],
+            'quotationDate' => '2025-07-23T00:00:00+02:00',
             'lines' => [
                 [
                     'price' => 100,
@@ -205,6 +206,7 @@ final class QuoteTest extends ApiTestCase
             'terms' => $quote->getTerms(),
             'notes' => $quote->getNotes(),
             'due' => '2005-01-20T00:00:00+02:00',
+            'quotationDate' => $quote->getQuotationDate()?->format(\DateTimeInterface::ATOM),
             'lines' => [
                 [
                     '@id' => $this->getIriFromResource($quote->getLines()->first()),
@@ -294,6 +296,7 @@ final class QuoteTest extends ApiTestCase
             'terms' => $quote->getTerms(),
             'notes' => $quote->getNotes(),
             'due' => '2005-01-20T00:00:00+02:00',
+            'quotationDate' => $quote->getQuotationDate()?->format(\DateTimeInterface::ATOM),
             'lines' => [
                 [
                     '@id' => $this->getIriFromResource($quote->getLines()->get(0)),
