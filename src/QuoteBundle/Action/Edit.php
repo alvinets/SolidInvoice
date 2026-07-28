@@ -18,11 +18,15 @@ use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use SolidInvoice\ClientBundle\Entity\Client;
 use SolidInvoice\CoreBundle\Billing\TotalCalculator;
+use SolidInvoice\CoreBundle\Enum\CustomFieldTarget;
+use SolidInvoice\CoreBundle\Service\CustomField\CustomFieldFormWriter;
 use SolidInvoice\QuoteBundle\DTO\QuoteFormDTO;
 use SolidInvoice\QuoteBundle\Entity\Quote;
 use SolidInvoice\QuoteBundle\Form\Type\QuoteType;
 use SolidInvoice\QuoteBundle\Manager\QuoteFormManager;
 use SolidInvoice\QuoteBundle\Model\Graph;
+use SolidInvoice\SaasBundle\Feature\Feature;
+use SolidWorx\Platform\PlatformBundle\Feature\FeatureGate;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
@@ -31,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Workflow\WorkflowInterface;
 use function assert;
 
@@ -43,6 +48,8 @@ final readonly class Edit
         private ManagerRegistry $doctrine,
         private TotalCalculator $totalCalculator,
         private QuoteFormManager $formManager,
+        private CustomFieldFormWriter $customFieldFormWriter,
+        private FeatureGate $featureGate,
     ) {
     }
 
@@ -62,6 +69,10 @@ final readonly class Edit
         // Convert Quote entity to DTO for editing
         $dto = $this->formManager->createDTOFromQuote($quote);
 
+        if ($quote->getId() instanceof Ulid) {
+            $formOptions['existing_target_id'] = $quote->getId();
+        }
+
         $form = $this->formFactory->create(QuoteType::class, $dto, $formOptions);
         $form->handleRequest($request);
 
@@ -70,6 +81,16 @@ final readonly class Edit
 
             // Update Quote from DTO
             $this->formManager->updateQuoteFromDTO($quote, $dto);
+
+            $quoteId = $quote->getId();
+            if ($quoteId instanceof Ulid && $this->featureGate->isEnabled(Feature::CustomFields->value) && $form->has('customFields')) {
+                $this->customFieldFormWriter->write(
+                    $form->get('customFields'),
+                    CustomFieldTarget::QUOTE,
+                    $quoteId,
+                    $quote,
+                );
+            }
 
             // Send the quote (publish and notify client)
             if ('send' === $action) {
