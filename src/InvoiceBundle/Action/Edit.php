@@ -18,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use SolidInvoice\ClientBundle\Entity\Client;
 use SolidInvoice\CoreBundle\Billing\TotalCalculator;
+use SolidInvoice\CoreBundle\Enum\CustomFieldTarget;
+use SolidInvoice\CoreBundle\Service\CustomField\CustomFieldFormWriter;
 use SolidInvoice\InvoiceBundle\DTO\InvoiceFormDTO;
 use SolidInvoice\InvoiceBundle\Email\InvoiceEmail;
 use SolidInvoice\InvoiceBundle\Entity\Invoice;
@@ -25,6 +27,8 @@ use SolidInvoice\InvoiceBundle\Enum\InvoiceStatus;
 use SolidInvoice\InvoiceBundle\Form\Type\InvoiceType;
 use SolidInvoice\InvoiceBundle\Manager\InvoiceFormManager;
 use SolidInvoice\InvoiceBundle\Model\Graph;
+use SolidInvoice\SaasBundle\Feature\Feature;
+use SolidWorx\Platform\PlatformBundle\Feature\FeatureGate;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
@@ -34,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Workflow\WorkflowInterface;
 use function assert;
 
@@ -47,6 +52,8 @@ final readonly class Edit
         private MailerInterface $mailer,
         private TotalCalculator $totalCalculator,
         private InvoiceFormManager $formManager,
+        private CustomFieldFormWriter $customFieldFormWriter,
+        private FeatureGate $featureGate,
     ) {
     }
 
@@ -77,9 +84,15 @@ final readonly class Edit
         // Convert Invoice entity to DTO for editing
         $dto = $this->formManager->createDTOFromInvoice($invoice);
 
-        $form = $this->formFactory->create(InvoiceType::class, $dto, [
+        $formOptions = [
             'currency' => $client->getCurrency(),
-        ]);
+        ];
+
+        if ($invoice->getId() instanceof Ulid) {
+            $formOptions['existing_target_id'] = $invoice->getId();
+        }
+
+        $form = $this->formFactory->create(InvoiceType::class, $dto, $formOptions);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -87,6 +100,16 @@ final readonly class Edit
 
             // Update Invoice from DTO
             $this->formManager->updateInvoiceFromDTO($invoice, $dto);
+
+            $invoiceId = $invoice->getId();
+            if ($invoiceId instanceof Ulid && $this->featureGate->isEnabled(Feature::CustomFields->value) && $form->has('customFields')) {
+                $this->customFieldFormWriter->write(
+                    $form->get('customFields'),
+                    CustomFieldTarget::INVOICE,
+                    $invoiceId,
+                    $invoice,
+                );
+            }
 
             // Publish the invoice if the action is 'send' or 'publish'
             if ('send' === $action || 'publish' === $action) {
